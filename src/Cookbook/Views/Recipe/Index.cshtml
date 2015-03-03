@@ -1,0 +1,74 @@
+﻿@model Cookbook.Web.ViewModels.RecipeViewModel
+
+@{
+    ViewBag.Title = @Html.DisplayFor(model => model.Name);
+}
+
+<h2>@Html.DisplayFor(model => model.Name)</h2>
+
+<div>
+    @if (Model.Serves != 0) { 
+        <h4>Порций: @Html.DisplayFor(model => model.Serves)</h4>
+    }
+    <hr />
+    <dl class="dl-horizontal">  
+        <dt>
+            Сложность
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Rating.Name)
+        </dd>     
+        <dt>
+            Время приготовления
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Preptime)
+        </dd>
+        <dd>
+            @if (!String.IsNullOrEmpty(Model.Photo))
+            {
+                <img src="@Url.Content("../../Content/RecipePics/" + Model.Photo)" class="thumbnail" />
+            }
+        </dd>
+
+        <dt>
+            Ингредиенты
+        </dt>
+        <dd>
+            <table cellpadding="5">
+                @foreach (var ingredient in Model.RecipeIngredients)
+                {
+                    <tr>
+                        <td>@ingredient.Ingredient.Name</td>
+                        <td align="right">
+                        @if (ingredient.Quantity != 0)
+                        { 
+                            @ingredient.Quantity 
+                        }
+                        </td>
+                        <td>@ingredient.Unit.Name</td>
+                    </tr>
+                }
+            </table>
+</dd>
+
+        <dt>
+            Инструкции
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Instructions)
+        </dd>
+        <dt>
+            Категории
+        </dt>
+        <dd>
+            @foreach (var category in Model.RecipeCategories)
+            {
+                <span>@category.Category.Name</span><span>;</span>
+            }
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Вернуться к списку рецептов",  "RecipeList", "Recipe")
+</p>

@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script id="recipeList-template" type="text/x-handlebars-template">
+    <table class="table" >
+           {{#each objects}}
+        <tr>
+            <td class="span1" width="150">
+                <i class="icon-star">
+                    <img src="/Cookbook/Content/RecipePics/{{Photo}}" class="thumbnail" width="150" />
+                </i>
+            </td>
+            <td class="span9" align="left">
+                <div><a href="/Cookbook/Recipe/Index/{{Id}}">{{Name}}</a></div>
+            </td>
+        </tr>
+           {{/each}}        
+        </table>     
+    </script>
+</head>
+<body>
+</body>
+</html>

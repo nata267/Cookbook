@@ -1,0 +1,116 @@
+﻿@model Cookbook.Web.ViewModels.RecipesPageViewModel
+@{
+    ViewBag.Title = "Список рецептов";
+}
+
+<h2>Список рецептов</h2>
+
+<div id="listofrecipes" class="span11">
+
+    @if (Model.RecipeList.Count() == 0)
+    {
+        <div class="alert alert-info">
+            Ничего не найдено
+        </div>
+    }
+    else
+    {
+        <div class="span12" id="recipeListContainer" style="margin-top:10px;">
+            <table class="table">
+                @Html.Partial("_Recipeslist", Model.RecipeList)
+            </table>
+        </div>
+        if (Model.RecipeList.Count() == 5)
+        {
+            <div id="morelink"> <a href="#" onclick="loadMore(); return false;">Больше рецептов</a></div>
+        }
+    }
+</div>
+
+<div id="content" style="color:Red;"></div>
+<div class="hiddenData" style="display:none;"></div>
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+        //to load templates to a hidden div
+        $.get('/Cookbook/Templates/Templates.htm', function (data) {
+            $('.hiddenData').html(data);
+        });
+    });
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+            loadMore();
+        }
+    });
+    var current = 0;
+    var currentRecipePage = 0;
+    function loadMore() {
+       // var sortBy = $('#sortby').val();
+       // var filterBy = $('#filterby').val();
+        var sortBy = "Date";
+         var filterBy = "All";
+
+        if (currentRecipePage > -1) {
+            currentRecipePage++;
+            $.ajax({
+                url: "/Cookbook/Recipe/RecipeList",
+                type: "POST",
+                data: { sortBy: sortBy, filterBy: filterBy, page: currentRecipePage },
+                dataType: "json",
+                beforeSend: function () {
+                    //console.log("a");
+                    $("#recipeListContainer").find(".alert-info").remove();
+                    $("#recipeListContainer").append('<div class="alert alert-info" id="loadimage">Загрузка...</div>');
+                },
+                /*error: function (jqXHR, exception) {
+                    if (jqXHR.status === 0) {
+                        alert('Not connect.\n Verify Network.');
+                    } else if (jqXHR.status == 404) {
+                        alert('Requested page not found. [404]');
+                    } else if (jqXHR.status == 500) {
+                        alert('Internal Server Error [500].');
+                    } else if (exception === 'parsererror') {
+                        alert('Requested JSON parse failed.');
+                    } else if (exception === 'timeout') {
+                        alert('Time out error.');
+                    } else if (exception === 'abort') {
+                        alert('Ajax request aborted.');
+                    } else {
+                        alert('Uncaught Error.\n' + jqXHR.responseText);
+                    }
+                },*/
+                success: function (data) {
+                    $('#loadimage').remove();
+                    if (data.length != 0) {
+                        loadTemplate(data);
+                        $('#morelink').show();
+                        if (data.length < 5) {
+                            addNoMoreRecipes();
+                        }
+                    } else {
+                        addNoMoreRecipes();
+                    }
+                }
+            });
+
+        }
+
+        function addNoMoreRecipes() {
+            $('#morelink').hide();
+            currentRecipePage = -1;
+            $("#recipeListContainer").find(".alert-info").remove();
+            $("#recipeListContainer").append('<div class="alert alert-info"> Больше рецептов не найдено </div>');
+        }
+    }
+
+    function loadTemplate(data) {
+       
+        var source = $("#recipeList-template").html();     
+        var template = Handlebars.compile(source);
+        $("#recipeListContainer").append(template({ objects: data }));
+    }
+</script>
+
+
+

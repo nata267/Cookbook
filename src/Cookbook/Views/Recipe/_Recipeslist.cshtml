@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Cookbook.Web.ViewModels.RecipeListViewModel>
+
+@{
+    ViewBag.Title = "_Recipeslist";
+}
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="span1" width="150">
+            <i class="icon-star">
+                @if (!String.IsNullOrEmpty(item.Photo))
+                {
+                    <img src="@Url.Content("Content/RecipePics/" + item.Photo)" class="thumbnail" width="150" />
+                }
+            </i>
+        </td>
+        <td class="span9" align="left">
+            <div>@Html.ActionLink(item.Name, "Index", "Recipe", new { id = item.Id }, null) </div>          
+        </td>
+        <!--<td class="span2">
+            @Html.ActionLink("Редактировать", "Edit", "Recipe", new { id = item.Id }) |
+            @Html.ActionLink("Удалить", "Delete", "Recipe", new { id = item.Id })
+        </td>-->
+    </tr>
+}
+
