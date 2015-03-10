@@ -32,20 +32,16 @@ namespace Cookbook.Service
         void SaveGoal();
         IEnumerable<Goal> SearchGoal(string goal);*/
 
-        IEnumerable<Recipe> GetRecipesByPage(int currentPage, int noOfRecords, string sortBy, string filterBy);
+        IEnumerable<Recipe> GetRecipesByPage(int currentPage, int noOfRecords, string sortBy, int[] ingredients, int[] categories, string text);
     }
 
     public class RecipeService : IRecipeService
     {
         private readonly IRecipeRepository recipeRepository;
-        /*private readonly IFollowUserRepository followUserrepository;
-        private readonly IUnitOfWork unitOfWork;*/
 
-        public RecipeService(IRecipeRepository recipeRepository/*, IFollowUserRepository followUserRepository, IUnitOfWork unitOfWork*/)
+        public RecipeService(IRecipeRepository recipeRepository)
         {
             this.recipeRepository = recipeRepository;
-            /*this.unitOfWork = unitOfWork;
-            this.followUserrepository = followUserRepository;*/
         }
         
         #region IGoalService Members
@@ -197,9 +193,9 @@ namespace Cookbook.Service
             return recipe;
         }
 
-        public IEnumerable<Recipe> GetRecipesByPage(int currentPage, int noOfRecords, string sortBy, string filterBy)
+        public IEnumerable<Recipe> GetRecipesByPage(int currentPage, int noOfRecords, string sortBy, int[] ingredients, int[] categories, string text)
         {
-            return recipeRepository.GetRecipesByPage(currentPage, noOfRecords, sortBy, filterBy);
+            return recipeRepository.GetRecipesByPage(currentPage, noOfRecords, sortBy, ingredients, categories, text);
         }
 
         #endregion

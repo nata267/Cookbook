@@ -30,10 +30,10 @@
 <div id="content" style="color:Red;"></div>
 <div class="hiddenData" style="display:none;"></div>
 <script type="text/javascript">
-    
+
     $(document).ready(function () {
         //to load templates to a hidden div
-        $.get('/Cookbook/Templates/Templates.htm', function (data) {
+        $.get('@Url.Content("Templates/Templates.htm")', function (data) {
             $('.hiddenData').html(data);
         });
     });
@@ -46,17 +46,12 @@
     var current = 0;
     var currentRecipePage = 0;
     function loadMore() {
-       // var sortBy = $('#sortby').val();
-       // var filterBy = $('#filterby').val();
-        var sortBy = "Date";
-         var filterBy = "All";
-
         if (currentRecipePage > -1) {
             currentRecipePage++;
             $.ajax({
-                url: "/Cookbook/Recipe/RecipeList",
+                url: '@Url.Content("Recipe/RecipeList")',
                 type: "POST",
-                data: { sortBy: sortBy, filterBy: filterBy, page: currentRecipePage },
+                data: { page: currentRecipePage },
                 dataType: "json",
                 beforeSend: function () {
                     //console.log("a");
@@ -105,8 +100,8 @@
     }
 
     function loadTemplate(data) {
-       
-        var source = $("#recipeList-template").html();     
+
+        var source = $("#recipeList-template").html();
         var template = Handlebars.compile(source);
         $("#recipeListContainer").append(template({ objects: data }));
     }

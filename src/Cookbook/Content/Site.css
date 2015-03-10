@@ -22,3 +22,16 @@ select,
 textarea {
     max-width: 280px;
 }
+
+textarea {
+    width:280px; 
+}
+
+.prokrutka {
+    width:280px; /* ширина нашего блока */
+    height:150px; /* высота нашего блока */
+    background: #fff; /* цвет фона, белый */
+    border: 1px solid #C1C1C1; /* размер и цвет границы блока */
+    overflow: auto; /* свойство для прокрутки по горизонтали. Автоматом, если больше блока */
+    padding:3px;
+}

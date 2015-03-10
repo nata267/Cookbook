@@ -14,15 +14,20 @@ namespace Cookbook.Web.Controllers
     {
         private readonly IRecipeService recipeService;
         private readonly IRatingService ratingService;
+        private readonly IIngredientService ingredientService;
+        private readonly ICategoryService categoryService;
         private readonly IRecipeIngredientService recipeIngredientService;
         private readonly IRecipeCategoryService recipeCategoryService;
 
-        public RecipeController(IRecipeService recipeService, IRatingService ratingService, IRecipeIngredientService recipeIngredientService, IRecipeCategoryService recipeCategoryService)
+        public RecipeController(IRecipeService recipeService, IRatingService ratingService, IRecipeIngredientService recipeIngredientService, IRecipeCategoryService recipeCategoryService
+            , IIngredientService ingredientService, ICategoryService categoryService)
         {
             this.recipeService = recipeService;
             this.ratingService = ratingService;
             this.recipeIngredientService = recipeIngredientService;
             this.recipeCategoryService = recipeCategoryService;
+            this.ingredientService = ingredientService;
+            this.categoryService = categoryService;
         }
 
         public ActionResult Index(int id)
@@ -46,12 +51,26 @@ namespace Cookbook.Web.Controllers
         /// <param name="page"></param>
         /// <returns></returns>
         /// 
-        public ActionResult RecipeList(string sortBy = "Date", string filterBy = "All", int page = 0)
+        public ActionResult RecipeList(int page = 0)
         {
-            var recipes = recipeService.GetRecipesByPage(page, 5, sortBy, filterBy).ToList();
+            int[] ingredients = null;
+            int[] categories = null;
+            string text = null;
+            string sortBy = "Name";
+
+            if (Session["search_by_ingredients"] != null)
+                ingredients = (int[])Session["search_by_ingredients"];
+
+            if (Session["search_by_categories"] != null)
+                categories = (int[])Session["search_by_categories"];
+
+            if (Session["search_by_text"] != null)
+                text = (string)Session["search_by_text"];
+
+            var recipes = recipeService.GetRecipesByPage(page, 5, sortBy, ingredients, categories, text).ToList();
 
             var recipesViewModel = Mapper.Map<IEnumerable<Recipe>, IEnumerable<RecipeListViewModel>>(recipes).ToList();
-            var recipesList = new RecipesPageViewModel(filterBy, sortBy);
+            var recipesList = new RecipesPageViewModel();
             recipesList.RecipeList = recipesViewModel;
 
             if (Request.IsAjaxRequest())
@@ -59,6 +78,23 @@ namespace Cookbook.Web.Controllers
                 return Json(recipesViewModel, JsonRequestBehavior.AllowGet);
             }
             return View("ListOfRecipes", recipesList);
+        }
+
+        public ActionResult Search()
+        {
+            var recipeSearchModel = new RecipeSearchModel();
+            recipeSearchModel.Ingredients = ingredientService.GetAll().ToList();
+            recipeSearchModel.Categories = categoryService.GetAll().ToList();
+            return View(recipeSearchModel);
+        }
+
+        [HttpPost]
+        public ActionResult Search(RecipeSearchModel searchModel)
+        {
+            Session["search_by_ingredients"] = searchModel.SelectedIngredients;
+            Session["search_by_categories"] = searchModel.SelectedCategories;
+            Session["search_by_text"] = searchModel.InputText;
+            return RedirectToAction("RecipeList");
         }
     }
 }

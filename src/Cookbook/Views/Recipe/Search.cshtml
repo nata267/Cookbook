@@ -1,0 +1,31 @@
+﻿@model Cookbook.Web.ViewModels.RecipeSearchModel
+
+@{
+    ViewBag.Title = "Поиск рецептов";
+}
+
+<h2>Поиск рецептов</h2>
+
+@using (Html.BeginForm())
+{
+    <p><strong>По ингредиентам:</strong></p>
+    <div class="prokrutka">
+        @foreach (var item in Model.Ingredients)
+        {
+            <input type="checkbox" name="SelectedIngredients" value="@item.Id" id="@item.Id"/> @item.Name<br/>
+        }
+    </div>
+    <hr />
+    <p><strong>По категориям:</strong></p>
+    <div class="prokrutka">
+        @foreach (var item in Model.Categories)
+        {
+            <input type="checkbox" name="SelectedCategories" value="@item.Id" id="@item.Id" /> @item.Name<br />
+        }
+    </div>
+    <hr />
+    <p><strong>По тексту:</strong></p>
+    <textarea name="InputText"></textarea><br />
+    <hr />
+    <input type="submit" value="Искать" />
+}

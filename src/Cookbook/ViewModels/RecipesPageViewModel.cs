@@ -13,7 +13,7 @@ namespace Cookbook.Web.ViewModels
 
         public IEnumerable<SelectListItem> SortBy { get; set; }*/
 
-        public RecipesPageViewModel(string selectedFilter, string selectedSort)
+        public RecipesPageViewModel()
         {
             /*FilterBy = new SelectList(new[]{
                        new SelectListItem{ Text="All", Value="All"},

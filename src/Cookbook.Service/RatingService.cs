@@ -18,14 +18,10 @@ namespace Cookbook.Service
     public class RatingService : IRatingService
     {
         private readonly IRatingRepository ratingRepository;
-        /*private readonly IFollowUserRepository followUserrepository;
-        private readonly IUnitOfWork unitOfWork;*/
 
-        public RatingService(IRatingRepository ratingRepository/*, IFollowUserRepository followUserRepository, IUnitOfWork unitOfWork*/)
+        public RatingService(IRatingRepository ratingRepository)
         {
             this.ratingRepository = ratingRepository;
-            /*this.unitOfWork = unitOfWork;
-            this.followUserrepository = followUserRepository;*/
         }
 
         #region IRatingService Members
